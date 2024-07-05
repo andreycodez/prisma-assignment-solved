@@ -16,8 +16,9 @@ export const findTheGrumpiestCriticId = async () => {
           score: 'asc',
         },
       },
+      take: 1,
     })
-    .then((data) => data[0].userId);
+    .then((groupedRatings) => groupedRatings[0].userId);
 };
 
 // find the critic with the highest average score
@@ -33,6 +34,7 @@ export const findTheNicestCriticId = async () => {
           score: 'desc',
         },
       },
+      take: 1,
     })
-    .then((data) => data[0].userId);
+    .then((groupedRatings) => groupedRatings[0].userId);
 };

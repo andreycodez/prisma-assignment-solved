@@ -9,5 +9,5 @@ export const getAverageUserAge = async () => {
         age: true,
       },
     })
-    .then((data) => data._avg.age);
+    .then((userAggregated) => userAggregated._avg.age);
 };

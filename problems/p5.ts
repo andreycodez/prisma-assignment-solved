@@ -5,18 +5,22 @@ import { prisma } from './prisma';
 // This one should require more javascript work than the previous ones
 
 export const getAllMoviesWithAverageScoreOverN = async (n: number) => {
-  const starRatingsWithMovies = await prisma.starRating.findMany({
-    include: {
-      movie: true,
+  const starRatingsWithMovies = await prisma.starRating.groupBy({
+    by: ['movieId'],
+    having: {
+      score: {
+        _avg: {
+          gt: n,
+        },
+      },
     },
   });
 
-  return reduce(
-    Object.values(groupBy(starRatingsWithMovies, prop('movieId'))),
-    (acc: unknown[], val) => {
-      const avg = sumBy(val, (val) => val.score) / val.length;
-      return avg > n ? [...acc, val[0].movie] : acc;
+  return prisma.movie.findMany({
+    where: {
+      id: {
+        in: starRatingsWithMovies.map((rating) => rating.movieId),
+      },
     },
-    []
-  );
+  });
 };
